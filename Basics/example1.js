@@ -1,5 +1,5 @@
 let imgElement = document.getElementById("imageSrc");
-imgElement.onload = equalizedImage;
+imgElement.onload = showGrabCutForeground;
 let inputElement = document.querySelector("#fileInput");
 
 inputElement.addEventListener(
@@ -143,4 +143,122 @@ function equalizedImage() {
     cv.equalizeHist(base, base);
     cv.imshow("outputCanvas", base);
     base.delete();
+}
+
+function showHoughTransform(){
+    let base = cv.imread(imgElement);
+    let dst = cv.Mat.zeros(base.rows, base.cols, cv.CV_8UC3);
+    let lines = new cv.Mat();
+    cv.cvtColor(base, base, cv.COLOR_RGBA2GRAY, 0);
+    cv.Canny(base,base, 50,200, 3);
+
+    cv.HoughLines(base, lines, 1, Math.PI / 180, 100, 0,0,0, Math.PI);
+
+    for (let i = 0; i < lines.rows; ++i) {
+        let rho = lines.data32F[i * 2];
+        let theta = lines.data32F[i * 2 + 1];
+        let a = Math.cos(theta);
+        let b = Math.sin(theta);
+        let x0 = a * rho;
+        let y0 = b * rho;
+        let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+        let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+        cv.line(dst, startPoint, endPoint, [255, 0, 0, 255]);
+    }
+    
+    cv.imshow("outputCanvas", dst)
+    cv.imshow("progressCanvas", base);
+    base.delete();
+    dst.delete();
+    
+}
+
+function showProbabislisticHough(){
+    let base = cv.imread(imgElement);
+    let dst = cv.Mat.zeros(base.rows, base.cols, cv.CV_8UC3);
+    let lines = new cv.Mat();
+    cv.cvtColor(base, base, cv.COLOR_RGBA2GRAY, 0);
+    cv.Canny(base,base, 50,200, 3);
+
+    cv.HoughLinesP(base, lines, 1, Math.PI / 180, 50, 50,5);
+
+    for(let i = 0; i < lines.rows; ++i){
+        let startPoint = new cv.Point(lines.data32S[i * 4], lines.data32S[i * 4 + 1]);
+        let endPoint = new cv.Point(lines.data32S[i * 4 + 2], lines.data32S[i * 4 + 3]);
+        cv.line(dst, startPoint, endPoint, [255, 0, 0, 255]);
+    }
+    cv.imshow("progressCanvas", base);
+    cv.imshow("outputCanvas", dst)
+
+    base.delete();
+    dst.delete();
+}
+
+function compareHoughTransforms(){
+    let base = cv.imread(imgElement);
+    let probResult = cv.imread(imgElement);
+    let probLines = new cv.Mat();
+    let normResult = cv.imread(imgElement);
+    let normLines = new cv.Mat();
+
+    cv.cvtColor(base, base, cv.COLOR_RGBA2GRAY, 0);
+    cv.Canny(base,base, 50,200, 3);
+
+
+    cv.HoughLinesP(base, probLines, 1, Math.PI / 180, 50, 50,5);
+    cv.HoughLines(base, normLines, 1, Math.PI / 180, 150, 0,0,0, Math.PI);
+
+    for(let i = 0; i < probLines.rows; ++i){
+        let startPoint = new cv.Point(probLines.data32S[i * 4], probLines.data32S[i * 4 + 1]);
+        let endPoint = new cv.Point(probLines.data32S[i * 4 + 2], probLines.data32S[i * 4 + 3]);
+        cv.line(probResult, startPoint, endPoint, [255, 0, 0, 255]);
+    }
+    console.log(normLines.data32F);
+
+    for (let i = 0; i < normLines.rows; ++i) {
+        let rho = normLines.data32F[i * 2];
+        let theta = normLines.data32F[i * 2 + 1];
+        let a = Math.cos(theta);
+        let b = Math.sin(theta);
+        let x0 = a * rho;
+        let y0 = b * rho;
+        let startPoint = {x: x0 - 1000 * b, y: y0 + 1000 * a};
+        let endPoint = {x: x0 + 1000 * b, y: y0 - 1000 * a};
+        cv.line(normResult, startPoint, endPoint, [255, 0, 0, 255]);
+    }
+
+    cv.imshow("progressCanvas", normResult);
+    cv.imshow("outputCanvas", probResult)
+
+    base.delete();
+    probResult.delete();
+}
+
+function showGrabCutForeground(){
+    let base = cv.imread(imgElement);
+    let goalSize = new cv.Size(0,0)
+    cv.pyrDown(base, base, goalSize, cv.BORDER_DEFAULT);
+  
+    cv.imshow('progressCanvas', base);
+    cv.cvtColor(base, base, cv.COLOR_RGBA2RGB, 0);
+    let mask = new cv.Mat();
+    let bgdModel = new cv.Mat();
+    let fgdModel = new cv.Mat();
+    let rect = new cv.Rect(20, 20, base.cols - 20, base.rows - 20);
+
+    cv.grabCut(base, mask, rect, bgdModel, fgdModel, 3, cv.GC_INIT_WITH_RECT);
+    for (let i = 0; i < base.rows; i++) {
+        for (let j = 0; j < base.cols; j++) {
+            if (mask.ucharPtr(i, j)[0] == 0 || mask.ucharPtr(i, j)[0] == 2) {
+                base.ucharPtr(i, j)[0] = 0;
+                base.ucharPtr(i, j)[1] = 0;
+                base.ucharPtr(i, j)[2] = 0;
+            }
+        }
+    }
+    cv.imshow('outputCanvas', base);
+    base.delete();
+    mask.delete();
+    bgdModel.delete();
+    fgdModel.delete();
 }
