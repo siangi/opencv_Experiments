@@ -1,6 +1,12 @@
 let imgElement = document.getElementById("imageSrc");
 imgElement.onload = () => {
-    showGrabCutForeground();
+    let image = cv.imread(imgElement)
+    showGrabCutForeground(image, "outputCanvas");
+    let goalSize = new cv.Size(0, 0);
+    cv.pyrDown(image, image, goalSize, cv.BORDER_DEFAULT);
+    showGrabCutForeground(image, "progressCanvas")
+
+    
 };
 let inputElement = document.querySelector("#fileInput");
 
@@ -124,21 +130,6 @@ function showCannyEdges() {
     edges.delete();
 }
 
-function calcHistogram() {
-    let base = cv.imread(imgElement);
-    cv.cvtColor(base, base, cv.COLOR_RGBA2GRAY, 0);
-    let srcVec = new cv.MatVector();
-    srcVec.push_back(base);
-    let histogram = new cv.Mat();
-    let mask = new cv.Mat();
-
-    cv.calcHist(srcVec, [0], mask, histogram, [256], [0, 255], false);
-    console.log(histogram.data);
-    console.log(histogram.data[250]);
-    cv.imshow("outputCanvas", base);
-    base.delete();
-}
-
 function equalizedImage() {
     let base = cv.imread(imgElement);
     cv.cvtColor(base, base, cv.COLOR_RGBA2GRAY, 0);
@@ -234,39 +225,48 @@ function compareHoughTransforms() {
     probResult.delete();
 }
 
-function showGrabCutForeground() {
-    let base = cv.imread(imgElement);
-    let blackWhite = cv.Mat.zeros(base.cols, base.rows, base.type());
+function showGrabCutForeground(imageMat, outputID) {
+    let base = imageMat.clone();
     let goalSize = new cv.Size(0, 0);
-    cv.pyrDown(base, base, goalSize, cv.BORDER_DEFAULT);
-    cv.pyrDown(base, base, goalSize, cv.BORDER_DEFAULT);
+    // cv.pyrDown(base, base, goalSize, cv.BORDER_DEFAULT);
 
     // cv.imshow("progressCanvas", base);
     cv.cvtColor(base, base, cv.COLOR_RGBA2RGB, 0);
     let mask = new cv.Mat();
     let bgdModel = new cv.Mat();
     let fgdModel = new cv.Mat();
-    let rect = new cv.Rect(20, 20, base.cols - 20, base.rows - 20);
+    let rect = new cv.Rect(10, 10, base.cols - 20, base.rows - 20);
 
     cv.grabCut(base, mask, rect, bgdModel, fgdModel, 3, cv.GC_INIT_WITH_RECT);
+    
     for (let i = 0; i < base.rows; i++) {
         for (let j = 0; j < base.cols; j++) {
             if (mask.ucharPtr(i, j)[0] == 0 || mask.ucharPtr(i, j)[0] == 2) {
                 base.ucharPtr(i, j)[0] = 0;
                 base.ucharPtr(i, j)[1] = 0;
                 base.ucharPtr(i, j)[2] = 0;
-            }
+            } /*else {
+                base.ucharPtr(i, j)[0] = 255;
+                base.ucharPtr(i, j)[1] = 255;
+                base.ucharPtr(i, j)[2] = 255;
+                base.ucharPtr(i,j)[3] = 255
+            }*/
         }
     }
-    let low = new cv.Mat(base.rows, base.cols, base.type(), [0, 0, 0, 0]);
-    let high = new cv.Mat(base.rows, base.cols, base.type(), [1, 1, 1, 255]);
-    cv.inRange(base, low, high, blackWhite);
-    let bounds = cv.boundingRect(blackWhite);
-    let color = new cv.Scalar(255, 0, 0, 0);
-    cv.rectangle(blackWhite, bounds, color, 1, cv.LINE_8, 0);
+    cv.cvtColor(base, base, cv.COLOR_RGB2GRAY, 0);
 
-    cv.imshow("progressCanvas", base);
-    cv.imshow("outputCanvas", blackWhite);
+    let bounds = cv.boundingRect(base);
+    let color = new cv.Scalar(255, 0, 0, 100);
+    console.log(bounds, base.cols, base.rows);
+    let point1 = new cv.Point(bounds.x, bounds.y);
+    let point2 = new cv.Point(bounds.x + bounds.width, bounds.y + bounds.height)
+    cv.rectangle(base, point1, point2, color, 1, cv.LINE_8, 0);
+    let checkPoint1 = new cv.Point(rect.x, rect.y);
+    let checkPoint2 = new cv.Point(rect.x + rect.width, rect.y + rect.height)
+    cv.rectangle(base, checkPoint1, checkPoint2, color, 1, cv.LINE_8, 0)
+
+    
+    cv.imshow(outputID, base);
     base.delete();
     mask.delete();
     bgdModel.delete();
