@@ -66,7 +66,6 @@ def getLargestContourArea(img):
             largestArea = currentArea
             largestContour = contour
 
-    print(largestArea)
     return largestContour
 
 #returns bounding rectangle (x,y, width, height)[0] and its centerpoint[1] from a binary saliency Map
@@ -79,10 +78,13 @@ def getSaliencyCoordinates(saliencyMap):
 
 #tries all three saliency algorithms
 def testSaliencyAlgorithms(path):
-    print(path)
-    img = cv.imread(path)
-    img = cv.pyrDown(img, (0,0))
-    img = cv.pyrDown(img, (0,0))
+    try:
+        img = cv.imread(path)
+        img = cv.pyrDown(img, (0,0))
+        img = cv.pyrDown(img, (0,0))
+    except:
+        return
+    
 
     grabCutMap = grabCut(img, False)
     grabCutBounds = cv.boundingRect(grabCutMap)
@@ -97,29 +99,29 @@ def testSaliencyAlgorithms(path):
     fineBounds = cv.boundingRect(fineLargest)
 
     # show SalientMaps too
-    # fineGrainedMap = cv.cvtColor(fineGrainedMap, cv.COLOR_GRAY2BGR)
-    # cv.rectangle(fineGrainedMap, fineBounds[:2], (fineBounds[0]+fineBounds[2], fineBounds[1] + fineBounds[3]), (255, 0, 0))
-    # cv.drawContours(fineGrainedMap, [fineLargest], 0, (255,0,0))
-    # spectralMap = cv.cvtColor(spectralMap, cv.COLOR_GRAY2BGR)
-    # cv.drawContours(spectralMap, [spectralLargest], 0, (0,0, 255), 2)
-    # cv.rectangle(spectralMap, spectralBounds[:2], (spectralBounds[0]+spectralBounds[2], spectralBounds[1] + spectralBounds[3]), (0, 0, 255))
-    # cv.imshow("GrabCut", grabCutMap)
-    # cv.imshow("Spectral", spectralMap)
-    # cv.imshow("fineGrained", fineGrainedMap)
+    fineGrainedMap = cv.cvtColor(fineGrainedMap, cv.COLOR_GRAY2BGR)
+    cv.rectangle(fineGrainedMap, fineBounds[:2], (fineBounds[0]+fineBounds[2], fineBounds[1] + fineBounds[3]), (255, 0, 0))
+    cv.drawContours(fineGrainedMap, [fineLargest], 0, (255,0,0))
+    spectralMap = cv.cvtColor(spectralMap, cv.COLOR_GRAY2BGR)
+    cv.drawContours(spectralMap, [spectralLargest], 0, (0,0, 255), 2)
+    cv.rectangle(spectralMap, spectralBounds[:2], (spectralBounds[0]+spectralBounds[2], spectralBounds[1] + spectralBounds[3]), (0, 0, 255))
+    cv.imshow("GrabCut", grabCutMap)
+    cv.imshow("Spectral", spectralMap)
+    cv.imshow("fineGrained", fineGrainedMap)
 
     #red = grabCut, green = finegrained, blue = spectral
     cv.rectangle(img, fineBounds[:2], (grabCutBounds[0] + grabCutBounds[2], grabCutBounds[1] + grabCutBounds[3]), (0, 0, 255))
     cv.rectangle(img, fineBounds[:2], (fineBounds[0] + fineBounds[2], fineBounds[1] + fineBounds[3]), (0, 255, 0))
     cv.rectangle(img, spectralBounds[:2], (spectralBounds[0]+spectralBounds[2], spectralBounds[1] + spectralBounds[3]), (255, 0, 0))
 
-    cv.imwrite("C:\\Studium\\BPROJ\\ArtVeeSaliencyTests\\" + os.path.basename(path), img)
-    # cv.imshow("original", img)
+    # cv.imwrite("D:\\Studium\\Bachelor\\ArtVeeSaliencyTests\\" + os.path.basename(path), img)
+    cv.imshow("original", img)
     
-    # cv.waitKey(0)
+    cv.waitKey(0)
 
 
 def testAllImagesInDirectory():
-    directory = "C:\\Studium\\BPROJ\\ArtVeeData\\"
+    directory = "D:\\Studium\\Bachelor\\ArtVeeData\\"
 
     for file in os.listdir(directory):
         filename = os.fsencode(file)
@@ -127,6 +129,5 @@ def testAllImagesInDirectory():
 
 
 
-testAllImagesInDirectory()
 # testSaliencyAlgorithms("C:\\Studium\\BPROJ\\ArtVeeData\\1918 Opfertag (1918) .jpg")
 # testSaliencyAlgorithms("C:\\Studium\\BPROJ\\ArtVeeData\\Blue Girls (1919 - 1920) .jpg")
