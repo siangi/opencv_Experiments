@@ -1,1 +1,4 @@
 Framework/opencv.js
+MasonryExperiments/masonry-test/.gitignore
+MasonryExperiments/masonry-test/package.json
+MasonryExperiments/masonry-test/package-lock.json
