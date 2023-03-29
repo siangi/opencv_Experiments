@@ -1,16 +1,8 @@
-import * as React from "react";
-import Masonry from "react-masonry-component";
+import React from "react";
+import DraggableGrid, { DraggableItem } from "ruuri";
 
-const masonryOptions = {
-    transitionDuration: 0,
-    columnWidth: ".grid-sizer",
-    itemSelector: ".grid-item",
-    percentPosition: true,
-    gutter: 30,
-    // fitWidth: true,
-};
-class Gallery extends React.Component {
-    images = [
+function MuuriGallery() {
+    let images = [
         { filename: "32. Plafond du Tombeau de Pa-Nehasi _Drah-Aboul-Negga_ _1911_ .jpg", resolution: [632, 800] },
         { filename: "A Shop and Two Figures _1882_ .jpg", resolution: [1253, 800] },
         { filename: "Einige Spitzen _1925_ .jpg", resolution: [573, 800] },
@@ -35,41 +27,37 @@ class Gallery extends React.Component {
         { filename: "Aussee II _1911_14_ .jpg", resolution: [1858, 800] },
     ];
 
-    render() {
-        const shuffledArray = this.images
-            .map((value) => ({ value, sort: Math.random() }))
-            .sort((a, b) => a.sort - b.sort)
-            .map(({ value }) => value)
-            .slice(0, 7)
-            .sort((a, b) => a.resolution[0] - b.resolution[0]);
+    const shuffledArray = images
+        .map((value) => ({ value, sort: Math.random() }))
+        .sort((a, b) => a.sort - b.sort)
+        .map(({ value }) => value)
+        .slice(0, 7)
+        .sort((a, b) => a.resolution[0] - b.resolution[0]);
 
-        const childElements = shuffledArray.map((element, index) => {
-            let source = process.env.PUBLIC_URL + "/testImages/" + element.filename;
-            return (
-                <img
-                    src={source}
-                    alt={element.resolution[0] / element.resolution[1] + "format"}
-                    className="grid-item grid-width-fluid"
-                    style={{ width: "calc(7% + 23% * " + element.resolution[0] + "/ 1400)" }}
-                ></img>
-            );
-        });
-
+    //https://docs.muuri.dev/grid-options.html
+    //https://www.npmjs.com/package/ruuri
+    const childElements = shuffledArray.map((element, index) => {
+        let source = process.env.PUBLIC_URL + "/testImages/" + element.filename;
         return (
-            <div>
-                <Masonry
-                    className={"grid"} // default ''
-                    elementType={"div"} // default 'div'
-                    options={masonryOptions}
-                    disableImagesLoaded={false} // default false
-                    updateOnEachImageLoad={false} // default false and works only if disableImagesLoaded is false
-                >
-                    <div className="grid-sizer"></div>
-                    {childElements}
-                </Masonry>
-            </div>
+            <DraggableItem key={index} className="grid-item" style={{ width: "calc(7% + 23% * " + element.resolution[0] + "/ 1400)" }}>
+                <img src={source} alt={element.resolution[0] / element.resolution[1] + "format"}></img>
+            </DraggableItem>
         );
-    }
+    });
+
+    return (
+        <div>
+            <DraggableGrid
+                className="grid"
+                draggable={false}
+                layout={{
+                    fillGaps: true,
+                }}
+            >
+                {childElements}
+            </DraggableGrid>
+        </div>
+    );
 }
 
-export default Gallery;
+export default MuuriGallery;

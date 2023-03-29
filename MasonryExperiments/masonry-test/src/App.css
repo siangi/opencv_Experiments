@@ -1,5 +1,5 @@
 img{
-  max-width: 100%;
+  width: 100%;
 }
 
 body{
@@ -26,26 +26,12 @@ body{
   width: 1%;
 }
 
-
-/* .grid {
-  max-width: 1200px;
-  margin: 0 auto;
+.stamp{
+  background: red;
+  position: absolute;
+  left:20%;
+  top: 5%;
+  width: 30%;
+  height: 20%;
 }
-clearfix
-.grid:after {
-  content: "";
-  display: block;
-  clear: both;
-}
-.grid-sizer,
-.grid-item {
-  background-color: red;
-  border: 1px solid darkred;
-  width: 33.33%;
-  padding: 8px;
-}
-2 columns wide
-.grid-item--width2 {
-  width: 66.66%;
-} */
 
