@@ -1,50 +1,45 @@
-.image-tall{
-  max-height: 100%;
-}
-
-.image-wide{
+img{
   max-width: 100%;
 }
 
+body{
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .grid{
-  width: 100vw;
-  height: 100vh;
+  width: 90vw;
+  height: 90vh;
 }
 
 .grid-item{
   float: left;
-  background-color: red;
-  border: 1px solid darkred;
-  height: 30vh;
-  margin-bottom: 10px;
+
+  height: fit-content;
 }
-.grid-sizer,
-.grid-item{
-  width: 20%;
+
+.grid-sizer{
+  width: 1%;
+}
+
+.grid-item-width1{
+  width: 15%;
 }
  
 .grid-item-width2{
-  width: 40%;
-  height: 40vh;
+  width: 20%;
+  /* height: 40vh; */
 }
 .grid-item-width3{
-  width: 60%;
-  height: 50vh;
+  width: 25%;
+  /* height: 50vh; */
 }
 
-.grid-item-height2{
-  height: 60vh;
-  width: 17%;
-}
-
-.grid-item-height3{
-  height: 70vh;
-  width: 12%;
-}
-
-.grid-item-height4{
-  height: 80vh;
-  width: 7%;
+.grid-item-width4{
+  width: 30%;
 }
 
 /* .grid {
