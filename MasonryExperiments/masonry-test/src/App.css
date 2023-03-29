@@ -9,42 +9,30 @@
 .grid{
   width: 100vw;
   height: 100vh;
+  padding: 2rem;
 }
 
 .grid-item{
-  float: left;
-  background-color: red;
-  border: 1px solid darkred;
-  height: 30vh;
+  /* max-height: 30vh; */
+  aspect-ratio: attr(width) / attr(height);
+  /* width: 20%; */
   margin-bottom: 10px;
 }
-.grid-sizer,
-.grid-item{
+
+
+.grid-sizer{
   width: 20%;
 }
- 
+
 .grid-item-width2{
-  width: 40%;
-  height: 40vh;
+  /* width: 25%; */
 }
+ 
 .grid-item-width3{
-  width: 60%;
-  height: 50vh;
+  /* width: 30%; */
 }
-
-.grid-item-height2{
-  height: 60vh;
-  width: 17%;
-}
-
-.grid-item-height3{
-  height: 70vh;
-  width: 12%;
-}
-
-.grid-item-height4{
-  height: 80vh;
-  width: 7%;
+.grid-item-width4{
+  /* width: 35%; */
 }
 
 /* .grid {

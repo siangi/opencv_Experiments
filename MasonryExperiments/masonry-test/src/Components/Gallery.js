@@ -5,7 +5,7 @@ const masonryOptions = {
     transitionDuration: 0,
     columnWidth: ".grid-sizer",
     itemSelector: ".grid-item",
-    gutter: 10,
+    gutter: 20,
 };
 class Gallery extends React.Component {
     // get 6 the full folder
@@ -22,17 +22,17 @@ class Gallery extends React.Component {
     render() {
         function sizeClassesFromResolution(width, height) {
             let format = width / height;
-            let sizeClasses = "";
+            let sizeClasses = "grid-item ";
 
-            if (format >= 3) {
-                sizeClasses += "grid-item-width3";
-            } else if (format >= 2) {
-                sizeClasses += "grid-item-width2";
-            } else if (format <= 1) {
-                sizeClasses += "grid-item-height2";
-            } else if (format < 0.5) {
-                sizeClasses += "grid-item-height3";
-            }
+            // if (format >= 2) {
+            //     sizeClasses += "grid-item-width4";
+            // } else if (format >= 1.5) {
+            //     sizeClasses += "grid-item-width3";
+            // } else if (format >= 0.8) {
+            //     sizeClasses += "grid-item-width2";
+            // } else {
+            //     sizeClasses += "grid-item-width1";
+            // }
 
             return sizeClasses;
         }
@@ -50,9 +50,13 @@ class Gallery extends React.Component {
         const childElements = this.images.map((element, index) => {
             let source = process.env.PUBLIC_URL + "/testImages/" + element.filename;
             return (
-                <div className={"grid-item " + sizeClassesFromResolution(element.resolution[0], element.resolution[1])}>
-                    <img src={source} alt={element.filename} className={imageClassFromResolution(element.resolution[0], element.resolution[1])}></img>
-                </div>
+                <img
+                    src={source}
+                    alt={element.resolution[0] / element.resolution[1] + "format"}
+                    className={sizeClassesFromResolution(element.resolution[0], element.resolution[1])}
+                    width={element.resolution[0]}
+                    height={element.resolution[1]}
+                ></img>
             );
         });
 
