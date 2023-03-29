@@ -1,13 +1,15 @@
-import logo from './logo.svg';
-import './App.css';
-import Gallery from './Components/Gallery';
+import "./App.css";
+import Gallery from "./Components/Gallery";
+// import { StackOExample } from "./Components/StackOExample";
 
 function App() {
-  return (
-    <div className="App">
-      <Gallery></Gallery>
-    </div>
-  );
+    // let divList = ["1", "2", "3", "4"];
+    return (
+        <div className="App">
+            {/* <StackOExample items={divList}></StackOExample> */}
+            <Gallery></Gallery>
+        </div>
+    );
 }
 
 export default App;

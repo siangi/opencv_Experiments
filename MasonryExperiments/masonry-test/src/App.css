@@ -1,38 +1,71 @@
-.App {
-  text-align: center;
+.image-tall{
+  max-height: 100%;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.image-wide{
+  max-width: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.grid{
+  width: 100vw;
+  height: 100vh;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.grid-item{
+  float: left;
+  background-color: red;
+  border: 1px solid darkred;
+  height: 30vh;
+  margin-bottom: 10px;
+}
+.grid-sizer,
+.grid-item{
+  width: 20%;
+}
+ 
+.grid-item-width2{
+  width: 40%;
+  height: 40vh;
+}
+.grid-item-width3{
+  width: 60%;
+  height: 50vh;
 }
 
-.App-link {
-  color: #61dafb;
+.grid-item-height2{
+  height: 60vh;
+  width: 17%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.grid-item-height3{
+  height: 70vh;
+  width: 12%;
 }
+
+.grid-item-height4{
+  height: 80vh;
+  width: 7%;
+}
+
+/* .grid {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+clearfix
+.grid:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+.grid-sizer,
+.grid-item {
+  background-color: red;
+  border: 1px solid darkred;
+  width: 33.33%;
+  padding: 8px;
+}
+2 columns wide
+.grid-item--width2 {
+  width: 66.66%;
+} */
+
