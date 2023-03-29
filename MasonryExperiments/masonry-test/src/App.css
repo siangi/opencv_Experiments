@@ -11,36 +11,21 @@ body{
 }
 
 .grid{
-  width: 90vw;
-  height: 90vh;
+  width: 80vw;
+  height: 80vh;
+  padding: 2rem;
 }
 
 .grid-item{
-  float: left;
+  /* aspect-ratio: attr(width) / attr(height); */
 
-  height: fit-content;
+  margin-bottom: 10px;
 }
 
 .grid-sizer{
   width: 1%;
 }
 
-.grid-item-width1{
-  width: 15%;
-}
- 
-.grid-item-width2{
-  width: 20%;
-  /* height: 40vh; */
-}
-.grid-item-width3{
-  width: 25%;
-  /* height: 50vh; */
-}
-
-.grid-item-width4{
-  width: 30%;
-}
 
 /* .grid {
   max-width: 1200px;

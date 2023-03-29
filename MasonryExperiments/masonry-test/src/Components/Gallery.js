@@ -5,7 +5,7 @@ const masonryOptions = {
     transitionDuration: 0,
     columnWidth: ".grid-sizer",
     itemSelector: ".grid-item",
-    percentPosition: true,
+    // percentPosition: true,
     gutter: 30,
 };
 class Gallery extends React.Component {
@@ -34,45 +34,22 @@ class Gallery extends React.Component {
     ];
 
     render() {
-        function sizeClassesFromResolution(width, height) {
-            let format = width / height;
-            let sizeClasses = "";
-
-            if (format >= 3) {
-                sizeClasses += "grid-item-width4";
-            } else if (format >= 2) {
-                sizeClasses += "grid-item-width3";
-            } else if (format >= 0.8) {
-                sizeClasses += "grid-item-width2";
-            } else {
-                sizeClasses += "grid-item-width1";
-            }
-
-            return sizeClasses;
-        }
-
-        function imageClassFromResolution(width, height) {
-            let format = width / height;
-
-            if (format < 0.8) {
-                return "image-wide";
-            } else {
-                return "image-tall";
-            }
-        }
-
         const shuffledArray = this.images
             .map((value) => ({ value, sort: Math.random() }))
             .sort((a, b) => a.sort - b.sort)
             .map(({ value }) => value)
-            .slice(0, 7);
+            .slice(0, 7)
+            .sort((a, b) => a.resolution[0] - b.resolution[0]);
 
         const childElements = shuffledArray.map((element, index) => {
             let source = process.env.PUBLIC_URL + "/testImages/" + element.filename;
             return (
-                <div className={"grid-item " + sizeClassesFromResolution(element.resolution[0], element.resolution[1])}>
-                    <img src={source} alt={element.filename} className={imageClassFromResolution(element.resolution[0], element.resolution[1])}></img>
-                </div>
+                <img
+                    src={source}
+                    alt={element.resolution[0] / element.resolution[1] + "format"}
+                    className="grid-item grid-width-fluid"
+                    style={{ width: "calc(7% + 23% * " + element.resolution[0] + "/ 1400)" }}
+                ></img>
             );
         });
 
