@@ -1,7 +1,13 @@
 import React from "react";
 import DraggableGrid, { DraggableItem } from "ruuri";
+import { useRef, useEffect } from "react";
 
 function MuuriGallery() {
+    const gridRef = useRef(null)
+
+    function refreshMuuriLayout(event){
+        gridRef.current.grid.refreshItems().layout();
+    }
     let images = [
         { filename: "32. Plafond du Tombeau de Pa-Nehasi _Drah-Aboul-Negga_ _1911_ .jpg", resolution: [632, 800] },
         { filename: "A Shop and Two Figures _1882_ .jpg", resolution: [1253, 800] },
@@ -32,15 +38,15 @@ function MuuriGallery() {
         .sort((a, b) => a.sort - b.sort)
         .map(({ value }) => value)
         .slice(0, 7)
-        .sort((a, b) => a.resolution[0] - b.resolution[0]);
+        // .sort((a, b) => a.resolution[0] - b.resolution[0]);
 
     //https://docs.muuri.dev/grid-options.html
     //https://www.npmjs.com/package/ruuri
     const childElements = shuffledArray.map((element, index) => {
         let source = process.env.PUBLIC_URL + "/testImages/" + element.filename;
         return (
-            <DraggableItem key={index} className="grid-item" style={{ width: "calc(7% + 23% * " + element.resolution[0] + "/ 1400)" }}>
-                <img src={source} alt={element.resolution[0] / element.resolution[1] + "format"}></img>
+            <DraggableItem key={index} className="grid-item">
+                <img src={source} alt={element.resolution[0] / element.resolution[1] + "format"} style={{ width: "calc(7vw + 23vw * " + element.resolution[0] + "/ 1400)"}} onLoad={() => refreshMuuriLayout()}></img>
             </DraggableItem>
         );
     });
@@ -48,11 +54,13 @@ function MuuriGallery() {
     return (
         <div>
             <DraggableGrid
-                className="grid"
-                draggable={false}
+                containerClass= "grid"
+                draggable= "false"
+                itemClass= "grid-item-container"
                 layout={{
                     fillGaps: true,
                 }}
+                ref={gridRef}
             >
                 {childElements}
             </DraggableGrid>
