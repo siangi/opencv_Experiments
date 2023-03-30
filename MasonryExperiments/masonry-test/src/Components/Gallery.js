@@ -41,7 +41,7 @@ class Gallery extends React.Component {
             .sort((a, b) => a.sort - b.sort)
             .map(({ value }) => value)
             .slice(0, 7)
-            .sort((a, b) => a.resolution[0] - b.resolution[0]);
+            // .sort((a, b) => a.resolution[0] - b.resolution[0]);
 
         const childElements = shuffledArray.map((element, index) => {
             let source = process.env.PUBLIC_URL + "/testImages/" + element.filename;
@@ -50,7 +50,7 @@ class Gallery extends React.Component {
                     src={source}
                     alt={element.resolution[0] / element.resolution[1] + "format"}
                     className="grid-item grid-width-fluid"
-                    style={{ width: "calc(7% + 23% * " + element.resolution[0] + "/ 1400)" }}
+                    style={{ width: "calc(7vw + 20vw * " + element.resolution[0] + "/ 1400)" }}
                 ></img>
             );
         });
