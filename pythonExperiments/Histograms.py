@@ -1,5 +1,4 @@
 import cv2 as cv
-from matplotlib import pyplot
 import numpy as np
 
 def grayScaleHistogram(img):
@@ -56,10 +55,10 @@ def findMaxInMultidimensional(multiDim):
     return(max, maxIdx)
 
 def multipleLargestMultiDimensional(multiDim, amount, needsMerging):
-    # if needsMerging:
-    #     flattened = cv.merge([multiDim[0], multiDim[1], multiDim[2]])
-    # else:
-    flattened = multiDim
+    if needsMerging:
+        flattened = cv.merge([multiDim[0], multiDim[1], multiDim[2]])
+    else:
+        flattened = multiDim
 
     results = []
     for i in range(0, amount):
