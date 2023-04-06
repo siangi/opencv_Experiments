@@ -51,7 +51,7 @@ def calcIntoRelativeValues(data):
 def testAllImagesInDirectory():
     directory = "C:\\Studium\BPROJ\\ArtVeeData\\"
     with open(directory + "hogAnalysis.csv", "w", encoding="utf8", newline="") as writeFile:
-        csvWriter = csv.DictWriter(f=writeFile, fieldnames=["imageName", "angleCounters", "normedAngleCounters", "relativeAngleCounters"], delimiter=";")
+        csvWriter = csv.DictWriter(f=writeFile, fieldnames=["imageName", "normedAngleCounters", "relative0", "relative1", "relative2","relative3","relative4","relative5","relative6","relative7",], delimiter=";")
         csvWriter.writeheader()
 
         for file in os.listdir(directory):
@@ -62,9 +62,15 @@ def testAllImagesInDirectory():
             relative = calcIntoRelativeValues(differences)
             resultDict = {
                 "imageName": file,
-                "angleCounters": str(maxAngles),
                 "normedAngleCounters": str(differences),
-                "relativeAngleCounters": str(relative)
+                "relative0": str(relative[0]),
+                "relative1": str(relative[1]),
+                "relative2": str(relative[2]),
+                "relative3": str(relative[3]),
+                "relative4": str(relative[4]),
+                "relative5": str(relative[5]),
+                "relative6": str(relative[6]),
+                "relative7": str(relative[7]),
             }
             csvWriter.writerow(resultDict)
 
